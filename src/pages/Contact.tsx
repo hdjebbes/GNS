@@ -1,0 +1,348 @@
+import { useState, FormEvent, useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { supabase } from '../lib/supabase';
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  message?: string;
+}
+
+export function Contact() {
+  const { t, language, languageVersion } = useLanguage();
+
+  // Force re-render when language changes
+  useEffect(() => {
+    // This effect ensures the component re-renders when language changes
+  }, [languageVersion]);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    // Validate name
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    } else if (formData.name.trim().length > 100) {
+      newErrors.name = 'Name must be less than 100 characters';
+    }
+
+    // Validate email
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(formData.email.trim())) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    // Validate message
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters';
+    } else if (formData.message.trim().length > 2000) {
+      newErrors.message = 'Message must be less than 2000 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const sanitizeInput = (input: string): string => {
+    return input.trim().replace(/[<>]/g, '');
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setStatus('sending');
+    setErrorMessage('');
+
+    try {
+      // Get IP address and user agent (optional, for spam protection)
+      let ipAddress: string | undefined;
+      let userAgent: string | undefined;
+
+      try {
+        userAgent = navigator.userAgent;
+        // Note: Getting real IP requires a backend service
+        // For now, we'll skip IP collection or use a service
+      } catch (err) {
+        // Ignore errors for optional fields
+      }
+
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          {
+            name: sanitizeInput(formData.name),
+            email: sanitizeInput(formData.email).toLowerCase(),
+            message: sanitizeInput(formData.message),
+            language: language,
+            ip_address: ipAddress,
+            user_agent: userAgent
+          }
+        ]);
+
+      if (error) throw error;
+
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setErrors({});
+
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setStatus('error');
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Failed to send message. Please try again.'
+      );
+      setTimeout(() => setStatus('idle'), 5000);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+    
+    // Clear error when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors({
+        ...errors,
+        [name]: undefined
+      });
+    }
+  };
+
+  const handleBlur = (field: keyof FormErrors) => {
+    // Validate individual field on blur
+    const newErrors: FormErrors = { ...errors };
+    
+    if (field === 'name') {
+      if (!formData.name.trim()) {
+        newErrors.name = 'Name is required';
+      } else if (formData.name.trim().length < 2) {
+        newErrors.name = 'Name must be at least 2 characters';
+      } else {
+        delete newErrors.name;
+      }
+    } else if (field === 'email') {
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required';
+      } else if (!validateEmail(formData.email.trim())) {
+        newErrors.email = 'Please enter a valid email address';
+      } else {
+        delete newErrors.email;
+      }
+    } else if (field === 'message') {
+      if (!formData.message.trim()) {
+        newErrors.message = 'Message is required';
+      } else if (formData.message.trim().length < 10) {
+        newErrors.message = 'Message must be at least 10 characters';
+      } else {
+        delete newErrors.message;
+      }
+    }
+    
+    setErrors(newErrors);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50/20">
+      {/* Header Section */}
+      <section className="relative overflow-hidden divi-section bg-gradient-to-br from-blue-50/40 via-blue-50/30 to-blue-100/20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(139,92,246,0.12),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(124,58,237,0.08),transparent_50%)]"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="divi-heading bg-gradient-to-r from-blue-900 via-blue-700 to-blue-800 bg-clip-text text-transparent mb-4">
+            {t.contact.title}
+          </h1>
+          <p className="divi-subheading text-blue-700 max-w-2xl mx-auto">
+            Get in touch with us. We're here to help your business grow.
+          </p>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden divi-section bg-gradient-to-br from-white via-blue-50/30 to-blue-50/20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.05),transparent_60%)]"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            <div className="space-y-6">
+              <div className="divi-card p-8">
+                <div className="flex items-start space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Mail className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-blue-900 mb-2">
+                      {t.contact.email}
+                    </h3>
+                    <a
+                      href="mailto:omanigns@gmail.com"
+                      className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
+                    >
+                      omanigns@gmail.com
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="divi-card p-8">
+                <div className="flex items-start space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <Phone className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-blue-900 mb-2">
+                      {t.contact.phone}
+                    </h3>
+                    <a
+                      href="tel:+96879924362"
+                      className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
+                    >
+                      +968 79924362
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="divi-card p-8">
+                <div className="flex items-start space-x-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <MapPin className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-blue-900 mb-2">
+                      {t.contact.location}
+                    </h3>
+                    <p className="text-blue-800/80 font-medium">
+                      {t.contact.locationValue}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="divi-card p-8 lg:p-10">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-blue-900 mb-2">
+                  {t.contact.form.name}
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('name')}
+                  required
+                  maxLength={100}
+                  className={`w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-400 outline-none transition-all ${
+                    errors.name ? 'border-red-300' : 'border-blue-200'
+                  }`}
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-blue-900 mb-2">
+                  {t.contact.form.email}
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('email')}
+                  required
+                  className={`w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-400 outline-none transition-all ${
+                    errors.email ? 'border-red-300' : 'border-blue-200'
+                  }`}
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-blue-900 mb-2">
+                  {t.contact.form.message}
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur('message')}
+                  required
+                  rows={5}
+                  maxLength={2000}
+                  className={`w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-400 outline-none transition-all resize-none ${
+                    errors.message ? 'border-red-300' : 'border-blue-200'
+                  }`}
+                />
+                <div className="flex justify-between items-center mt-1">
+                  {errors.message && (
+                    <p className="text-sm text-red-600">{errors.message}</p>
+                  )}
+                  <p className={`text-xs ml-auto ${formData.message.length > 1800 ? 'text-red-600' : 'text-blue-600'}`}>
+                    {formData.message.length} / 2000
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-600 text-white px-6 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-700 hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                <span>
+                  {status === 'sending' ? t.contact.form.sending : t.contact.form.submit}
+                </span>
+                {status === 'idle' && <Send className="w-5 h-5" />}
+              </button>
+
+              {status === 'success' && (
+                <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md">
+                  {t.contact.form.success}
+                </div>
+              )}
+
+              {status === 'error' && (
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
+                  {errorMessage || t.contact.form.error}
+                </div>
+              )}
+            </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
