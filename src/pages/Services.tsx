@@ -1,15 +1,8 @@
 import { useLanguage } from '../contexts/LanguageContext';
-import { useEffect } from 'react';
 import { Monitor, Users, FileText, Truck, Globe } from 'lucide-react';
 
 export function Services() {
-
-  const { t, languageVersion } = useLanguage();
-
-  // Force re-render when language changes
-  useEffect(() => {
-    // This effect ensures the component re-renders when language changes
-  }, [languageVersion]);
+  const { t } = useLanguage();
 
   const icons = [Monitor, Users, FileText, Truck, Globe];
 

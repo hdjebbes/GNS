@@ -1,4 +1,4 @@
-import { useState, FormEvent, useEffect } from 'react';
+import { useState, FormEvent } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
@@ -10,12 +10,7 @@ interface FormErrors {
 }
 
 export function Contact() {
-  const { t, language, languageVersion } = useLanguage();
-
-  // Force re-render when language changes
-  useEffect(() => {
-    // This effect ensures the component re-renders when language changes
-  }, [languageVersion]);
+  const { t, language } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',

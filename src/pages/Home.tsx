@@ -1,18 +1,11 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ArrowRight, Sparkles, Globe2, TrendingUp, Shield } from 'lucide-react';
 import { Logo } from '../components/Logo';
 
 export function Home() {
-  const { t, languageVersion, language } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
-
-  // Force re-render when language changes using languageVersion
-  useEffect(() => {
-    console.log('🏠 Home: Language changed to', language, 'version:', languageVersion);
-    console.log('🏠 Home: Title is now:', t.home.title);
-  }, [languageVersion, language, t.home.title]);
 
   const serviceIcons = [Sparkles, Globe2, TrendingUp, Shield];
 

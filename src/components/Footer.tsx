@@ -1,16 +1,10 @@
-import { useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Logo } from './Logo';
 
 export function Footer() {
-  const { t, languageVersion } = useLanguage();
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
-  
-  // Force re-render when language changes
-  useEffect(() => {
-    // This ensures the component re-renders when languageVersion changes
-  }, [languageVersion]);
 
   return (
     <footer className="bg-[#0f172a] text-white mt-auto relative overflow-hidden border-t border-blue-900/30">

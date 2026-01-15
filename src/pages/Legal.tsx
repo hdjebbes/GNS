@@ -1,14 +1,7 @@
 import { useLanguage } from '../contexts/LanguageContext';
-import { useEffect } from 'react';
 
 export function Legal() {
-
-  const { t, languageVersion } = useLanguage();
-
-  // Force re-render when language changes
-  useEffect(() => {
-    // This effect ensures the component re-renders when language changes
-  }, [languageVersion]);
+  const { t } = useLanguage();
 
   const items = [
     { label: t.legal.companyName, value: t.legal.companyNameValue },

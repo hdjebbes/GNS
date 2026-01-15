@@ -1,14 +1,8 @@
-import { useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Target, Eye } from 'lucide-react';
 
 export function About() {
-  const { t, languageVersion } = useLanguage();
-
-  // Force re-render when language changes
-  useEffect(() => {
-    // This effect ensures the component re-renders when language changes
-  }, [languageVersion]);
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50/20">
