@@ -84,7 +84,7 @@ export function Contact() {
         // Ignore errors for optional fields
       }
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('contact_submissions')
         .insert([
           {
@@ -95,21 +95,37 @@ export function Contact() {
             ip_address: ipAddress,
             user_agent: userAgent
           }
-        ]);
+        ])
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
       setErrors({});
 
       setTimeout(() => setStatus('idle'), 5000);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error submitting form:', error);
       setStatus('error');
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Failed to send message. Please try again.'
-      );
+      
+      let message = 'Failed to send message. Please try again.';
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        const errorMessage = String(error.message);
+        if (errorMessage.includes('CORS') || errorMessage.includes('NetworkError')) {
+          message = 'Network error. Please check your connection and try again.';
+        } else if (errorMessage.includes('fetch')) {
+          message = 'Unable to connect to the server. Please try again later.';
+        } else {
+          message = errorMessage;
+        }
+      }
+      
+      setErrorMessage(message);
       setTimeout(() => setStatus('idle'), 5000);
     }
   };
