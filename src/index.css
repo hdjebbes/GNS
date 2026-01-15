@@ -72,14 +72,14 @@
   }
   
   .divi-section {
-    @apply py-24 lg:py-32;
+    @apply py-16 sm:py-20 md:py-24 lg:py-32;
   }
   
   .divi-heading {
-    @apply text-5xl lg:text-6xl font-extrabold tracking-tight;
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight;
   }
   
   .divi-subheading {
-    @apply text-2xl lg:text-3xl font-light;
+    @apply text-xl sm:text-2xl lg:text-3xl font-light;
   }
 }

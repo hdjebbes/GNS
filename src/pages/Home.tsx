@@ -23,7 +23,7 @@ export function Home() {
             {/* Logo as decorative element */}
             <div className="flex justify-center mb-8">
               <div className="relative">
-                <Logo size="lg" showText={false} className="opacity-30 drop-shadow-2xl scale-[2.0]" />
+                <Logo size="lg" showText={false} className="opacity-20 sm:opacity-30 drop-shadow-2xl scale-150 sm:scale-[2.0]" />
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="w-64 h-64 bg-gradient-to-br from-blue-400/30 to-blue-500/30 rounded-full blur-2xl"></div>
                 </div>
@@ -46,14 +46,14 @@ export function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
                 onClick={() => navigate('/contact')}
-                className="group inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                className="group inline-flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 rounded-lg font-semibold text-base sm:text-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
               >
                 <span>{t.nav.contact}</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => navigate('/services')}
-                className="inline-flex items-center justify-center px-8 py-4 rounded-lg font-semibold text-lg text-blue-700 bg-white border-2 border-blue-300 hover:border-blue-400 transition-all duration-300 hover:shadow-lg"
+                className="inline-flex items-center justify-center px-6 py-3 sm:px-7 sm:py-3.5 md:px-8 md:py-4 rounded-lg font-semibold text-base sm:text-lg text-blue-700 bg-white border-2 border-blue-300 hover:border-blue-400 transition-all duration-300 hover:shadow-lg"
               >
                 {t.nav.services}
               </button>

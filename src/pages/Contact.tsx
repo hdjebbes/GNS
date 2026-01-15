@@ -182,9 +182,9 @@ export function Contact() {
       <section className="relative overflow-hidden divi-section bg-gradient-to-br from-white via-blue-50/30 to-blue-50/20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(139,92,246,0.05),transparent_60%)]"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
             <div className="space-y-6">
-              <div className="divi-card p-8">
+              <div className="divi-card p-6 md:p-8">
                 <div className="flex items-start space-x-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <Mail className="w-7 h-7 text-white" />
@@ -203,7 +203,7 @@ export function Contact() {
                 </div>
               </div>
 
-              <div className="divi-card p-8">
+              <div className="divi-card p-6 md:p-8">
                 <div className="flex items-start space-x-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <Phone className="w-7 h-7 text-white" />
@@ -222,7 +222,7 @@ export function Contact() {
                 </div>
               </div>
 
-              <div className="divi-card p-8">
+              <div className="divi-card p-6 md:p-8">
                 <div className="flex items-start space-x-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                     <MapPin className="w-7 h-7 text-white" />
@@ -239,7 +239,7 @@ export function Contact() {
               </div>
             </div>
 
-            <div className="divi-card p-8 lg:p-10">
+            <div className="divi-card p-6 md:p-8 lg:p-10">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-blue-900 mb-2">

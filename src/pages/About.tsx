@@ -22,7 +22,7 @@ export function About() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             {/* Company Description */}
-            <div className="mb-20 divi-card p-10">
+            <div className="mb-16 md:mb-20 divi-card p-6 md:p-10">
               <div className="flex items-center mb-6">
                 <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
                   <Target className="w-7 h-7 text-white" />
@@ -35,8 +35,8 @@ export function About() {
             </div>
 
             {/* Mission & Vision */}
-            <div className="grid md:grid-cols-2 gap-8 mb-20">
-              <div className="divi-card p-10 bg-gradient-to-br from-blue-50/80 to-blue-50/80 border-blue-200/50">
+            <div className="grid md:grid-cols-2 gap-8 mb-16 md:mb-20">
+              <div className="divi-card p-6 md:p-10 bg-gradient-to-br from-blue-50/80 to-blue-50/80 border-blue-200/50">
                 <div className="flex items-center mb-6">
                   <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
                     <Target className="w-7 h-7 text-white" />
@@ -50,7 +50,7 @@ export function About() {
                 </p>
               </div>
 
-              <div className="divi-card p-10 bg-gradient-to-br from-blue-50/80 to-blue-50/80 border-blue-200/50">
+              <div className="divi-card p-6 md:p-10 bg-gradient-to-br from-blue-50/80 to-blue-50/80 border-blue-200/50">
                 <div className="flex items-center mb-6">
                   <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
                     <Eye className="w-7 h-7 text-white" />

@@ -10,8 +10,8 @@ export function Footer() {
     <footer className="bg-[#0f172a] text-white mt-auto relative overflow-hidden border-t border-blue-900/30">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.15),transparent_70%)]"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(37,99,235,0.1),transparent_50%)]"></div>
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 md:gap-12 mb-12">
           <div>
             <Logo size="lg" showText={true} className="mb-6" />
             <p className="text-blue-200 leading-relaxed">
