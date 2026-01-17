@@ -6,9 +6,10 @@ interface SEOProps {
   title?: string;
   description?: string;
   keywords?: string;
+  image?: string;
 }
 
-export function SEO({ title, description, keywords }: SEOProps) {
+export function SEO({ title, description, keywords, image }: SEOProps) {
   const location = useLocation();
   const { language, t } = useLanguage();
 
@@ -67,9 +68,20 @@ export function SEO({ title, description, keywords }: SEOProps) {
     const finalTitle = title || `${pageContent.title} | GLOBAL NEXUS SOLUTIONS LLC`;
     const finalDescription = description || pageContent.description;
     const finalKeywords = keywords || pageContent.keywords;
+    const baseUrl = window.location.origin;
+    const currentUrl = window.location.href;
+    const ogImage = image || `${baseUrl}/logo.png`;
 
     // Update document title
     document.title = finalTitle;
+
+    // Update HTML lang attribute
+    const htmlLangMap: Record<string, string> = {
+      en: 'en',
+      fr: 'fr',
+      ar: 'ar'
+    };
+    document.documentElement.lang = htmlLangMap[language] || 'en';
 
     // Update or create meta tags
     const updateMetaTag = (name: string, content: string, attribute: string = 'name') => {
@@ -90,13 +102,19 @@ export function SEO({ title, description, keywords }: SEOProps) {
     updateMetaTag('og:title', finalTitle, 'property');
     updateMetaTag('og:description', finalDescription, 'property');
     updateMetaTag('og:type', 'website', 'property');
-    updateMetaTag('og:url', window.location.href, 'property');
+    updateMetaTag('og:url', currentUrl, 'property');
     updateMetaTag('og:site_name', 'GLOBAL NEXUS SOLUTIONS LLC', 'property');
+    updateMetaTag('og:image', ogImage, 'property');
+    updateMetaTag('og:image:width', '1200', 'property');
+    updateMetaTag('og:image:height', '630', 'property');
+    updateMetaTag('og:image:alt', 'GLOBAL NEXUS SOLUTIONS LLC Logo', 'property');
     
     // Twitter Card tags
     updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:title', finalTitle);
     updateMetaTag('twitter:description', finalDescription);
+    updateMetaTag('twitter:image', ogImage);
+    updateMetaTag('twitter:image:alt', 'GLOBAL NEXUS SOLUTIONS LLC Logo');
     
     // Language and locale
     updateMetaTag('language', language);
@@ -114,9 +132,43 @@ export function SEO({ title, description, keywords }: SEOProps) {
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', window.location.href);
+    canonical.setAttribute('href', currentUrl);
 
-  }, [location.pathname, language, title, description, keywords, t]);
+    // Additional SEO meta tags
+    updateMetaTag('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    updateMetaTag('googlebot', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    updateMetaTag('theme-color', '#2563eb');
+    updateMetaTag('color-scheme', 'light');
+    
+    // Geo tags
+    updateMetaTag('geo.region', 'OM');
+    updateMetaTag('geo.placename', 'Sultanate of Oman');
+    
+    // Mobile optimization
+    updateMetaTag('format-detection', 'telephone=yes');
+    
+    // Author and copyright
+    updateMetaTag('author', 'GLOBAL NEXUS SOLUTIONS LLC');
+    updateMetaTag('copyright', 'GLOBAL NEXUS SOLUTIONS LLC');
+    
+    // Language alternates (hreflang)
+    const updateHreflangTag = (lang: string, href: string) => {
+      let element = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`) as HTMLLinkElement;
+      if (!element) {
+        element = document.createElement('link');
+        element.setAttribute('rel', 'alternate');
+        element.setAttribute('hreflang', lang);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('href', href);
+    };
+
+    updateHreflangTag('en', `${baseUrl}${location.pathname}`);
+    updateHreflangTag('fr', `${baseUrl}${location.pathname}`);
+    updateHreflangTag('ar', `${baseUrl}${location.pathname}`);
+    updateHreflangTag('x-default', `${baseUrl}${location.pathname}`);
+
+  }, [location.pathname, language, title, description, keywords, image, t]);
 
   return null;
 }

@@ -12,7 +12,7 @@ export function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50/20 via-white to-blue-50/10">
       {/* Hero Section - Style Divi */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50/40 via-blue-50/30 to-blue-100/20 divi-section">
+      <header className="relative overflow-hidden bg-gradient-to-br from-blue-50/40 via-blue-50/30 to-blue-100/20 divi-section">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.12),transparent_50%)]"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(37,99,235,0.08),transparent_50%)]"></div>
@@ -60,7 +60,7 @@ export function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </header>
 
       {/* Services Section - Style Divi */}
       <section className="relative overflow-hidden divi-section bg-gradient-to-br from-white via-blue-50/30 to-blue-50/20">

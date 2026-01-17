@@ -4,6 +4,7 @@ import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { SEO } from './components/SEO';
+import { StructuredData } from './components/StructuredData';
 import { LoadingSpinner } from './components/LoadingSpinner';
 
 // Lazy load all page components with error handling
@@ -43,6 +44,7 @@ function AppContent() {
   return (
     <>
       <SEO />
+      <StructuredData />
       <ScrollToTop />
       <div className="min-h-screen flex flex-col relative">
         <Navigation />
