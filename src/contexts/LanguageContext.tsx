@@ -21,9 +21,14 @@ function getLanguageFromCountryCode(countryCode: string): Language {
   return 'en';
 }
 
-// api.country.is: HTTPS, client-side friendly, returns { ip, country } (2-letter code)
-const IP_GEO_API = 'https://api.country.is/';
+// Public API (can be blocked by ad blockers / ERR_BLOCKED_BY_CLIENT). Prefer same-origin proxy via VITE_GEO_PROXY_URL.
+const IP_GEO_API_FALLBACK = 'https://api.country.is/';
 const FETCH_TIMEOUT_MS = 5000;
+
+function getGeoApiUrl(): string {
+  const proxy = import.meta.env.VITE_GEO_PROXY_URL?.trim();
+  return proxy || IP_GEO_API_FALLBACK;
+}
 
 /** AbortController + setTimeout for browsers that don't support AbortSignal.timeout(). */
 function fetchWithTimeout(url: string): Promise<Response> {
@@ -37,8 +42,9 @@ function fetchWithTimeout(url: string): Promise<Response> {
 
 /** Fetches user's country code from connection IP and returns the matching language, or "en" on error. */
 async function fetchLanguageFromIp(): Promise<Language> {
+  const url = getGeoApiUrl();
   try {
-    const res = await fetchWithTimeout(IP_GEO_API);
+    const res = await fetchWithTimeout(url);
     if (!res.ok) return 'en';
     const data = await res.json();
     const code = (data?.country ?? data?.country_code ?? data?.countryCode ?? '').toUpperCase();
