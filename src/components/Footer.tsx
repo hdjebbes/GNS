@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Logo } from './Logo';
@@ -57,13 +58,29 @@ export function Footer() {
         </div>
 
         <div className="border-t border-blue-800/50 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-blue-300 text-sm">
-              © {currentYear} GLOBAL NEXUS SOLUTIONS LLC. All rights reserved.
-            </p>
-            <p className="text-blue-400 text-sm">
-              CR Number: {t.legal.crNumberValue}
-            </p>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+              <Link
+                to="/privacy"
+                className="text-blue-300 hover:text-white transition-colors"
+              >
+                {t.footer.privacyPolicy}
+              </Link>
+              <a
+                href="mailto:omanigns@gmail.com?subject=Data%20Privacy%20Request"
+                className="text-blue-300 hover:text-white transition-colors"
+              >
+                {t.footer.dataRights}
+              </a>
+            </div>
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+              <p className="text-blue-300 text-sm">
+                © {currentYear} GLOBAL NEXUS SOLUTIONS LLC. All rights reserved.
+              </p>
+              <p className="text-blue-400 text-sm">
+                CR Number: {t.legal.crNumberValue}
+              </p>
+            </div>
           </div>
         </div>
       </div>

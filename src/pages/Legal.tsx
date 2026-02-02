@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export function Legal() {
@@ -39,6 +40,14 @@ export function Legal() {
                     </p>
                   </div>
                 ))}
+                <div className="pt-6">
+                  <Link
+                    to="/privacy"
+                    className="text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    {t.footer.privacyPolicy} →
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

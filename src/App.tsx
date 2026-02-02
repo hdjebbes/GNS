@@ -26,6 +26,9 @@ const Contact = lazy(() =>
 const Legal = lazy(() => 
   import('./pages/Legal').then(module => ({ default: module.Legal }))
 );
+const Privacy = lazy(() => 
+  import('./pages/Privacy').then(module => ({ default: module.Privacy }))
+);
 const NotFound = lazy(() => 
   import('./pages/NotFound').then(module => ({ default: module.NotFound }))
 );
@@ -57,6 +60,7 @@ function AppContent() {
               <Route path="/sectors" element={<Sectors />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/legal" element={<Legal />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

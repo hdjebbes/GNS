@@ -93,7 +93,9 @@ export const translations = {
         submit: 'Send Message',
         sending: 'Sending...',
         success: 'Message sent successfully!',
-        error: 'Failed to send message. Please try again.'
+        error: 'Failed to send message. Please try again.',
+        consentLabel: 'I have read the Privacy Policy and consent to the processing of my personal data to respond to my inquiry.',
+        consentError: 'You must accept the Privacy Policy to submit this form.'
       }
     },
     legal: {
@@ -106,6 +108,55 @@ export const translations = {
       countryValue: 'Sultanate of Oman',
       crNumber: 'Commercial Registration Number',
       crNumberValue: '1594268'
+    },
+    privacy: {
+      title: 'Privacy Policy',
+      lastUpdated: 'Last updated: February 2025',
+      intro: 'GLOBAL NEXUS SOLUTIONS LLC ("we", "us", "our") is committed to protecting your personal data. This Privacy Policy explains how we collect, use, store, and protect your information in compliance with applicable laws including the Oman Personal Data Protection Law (PDPL), EU GDPR, UAE Federal Decree Law 45/2021, and US state privacy laws.',
+      controller: {
+        title: 'Data Controller',
+        content: 'The data controller is GLOBAL NEXUS SOLUTIONS LLC, a Limited Liability Company registered in the Sultanate of Oman (Commercial Registration No. 1594268). Contact: omanigns@gmail.com'
+      },
+      collected: {
+        title: 'Data We Collect',
+        content: 'When you use our contact form, we collect: name, email address, message content, language preference, and optionally technical data (IP address, user agent) for spam protection. We also store your language preference in your browser (localStorage) for site functionality.'
+      },
+      purposes: {
+        title: 'Purposes of Processing',
+        content: 'We process your data to respond to your inquiries, provide requested services, improve our website, and comply with legal obligations. We do not sell, rent, or trade your personal data.'
+      },
+      legalBasis: {
+        title: 'Legal Basis',
+        content: 'Processing is based on your explicit consent when you submit the contact form. For essential site functionality (language preference), we rely on legitimate interest.'
+      },
+      retention: {
+        title: 'Data Retention',
+        content: 'Contact form submissions are retained for 24 months from the date of submission, unless a longer retention is required by law. You may request earlier deletion at any time.'
+      },
+      rights: {
+        title: 'Your Rights',
+        content: 'You have the right to: access your data, rectify inaccuracies, request erasure, receive a copy (portability), object to processing, and withdraw consent. Contact us at omanigns@gmail.com with the subject "Data Privacy Request". We will respond within 45 days.'
+      },
+      cookies: {
+        title: 'Cookies & Local Storage',
+        content: 'We use essential localStorage to store your language preference only. We do not use advertising or tracking cookies. No consent is required for this strictly necessary functionality.'
+      },
+      transfers: {
+        title: 'International Transfers',
+        content: 'Your data may be processed by Supabase (our hosting provider) which may operate in various jurisdictions. We ensure appropriate safeguards (e.g. Standard Contractual Clauses) are in place for transfers outside your jurisdiction.'
+      },
+      security: {
+        title: 'Security',
+        content: 'We implement technical and organizational measures to protect your data, including encryption in transit (HTTPS), access controls, and Row Level Security on our databases.'
+      },
+      contact: {
+        title: 'Contact & Complaints',
+        content: 'For privacy inquiries or to exercise your rights: omanigns@gmail.com. You may also lodge a complaint with your local data protection authority.'
+      }
+    },
+    footer: {
+      privacyPolicy: 'Privacy Policy',
+      dataRights: 'Exercise Your Data Rights'
     }
   },
   fr: {
@@ -202,7 +253,9 @@ export const translations = {
         submit: 'Envoyer',
         sending: 'Envoi en cours...',
         success: 'Message envoyé avec succès !',
-        error: 'Échec de l\'envoi. Veuillez réessayer.'
+        error: 'Échec de l\'envoi. Veuillez réessayer.',
+        consentLabel: 'J\'ai lu la politique de confidentialité et j\'accepte le traitement de mes données personnelles pour répondre à ma demande.',
+        consentError: 'Vous devez accepter la politique de confidentialité pour envoyer ce formulaire.'
       }
     },
     legal: {
@@ -215,6 +268,25 @@ export const translations = {
       countryValue: 'Sultanat d\'Oman',
       crNumber: 'Numéro d\'enregistrement commercial',
       crNumberValue: '1594268'
+    },
+    privacy: {
+      title: 'Politique de confidentialité',
+      lastUpdated: 'Dernière mise à jour : février 2025',
+      intro: 'GLOBAL NEXUS SOLUTIONS LLC (« nous », « notre ») s\'engage à protéger vos données personnelles. Cette politique explique comment nous collectons, utilisons, stockons et protégeons vos informations conformément aux lois applicables, notamment la loi omanaise sur la protection des données (PDPL), le RGPD européen, la loi fédérale des EAU 45/2021 et les lois américaines sur la confidentialité.',
+      controller: { title: 'Responsable du traitement', content: 'Le responsable du traitement est GLOBAL NEXUS SOLUTIONS LLC, société à responsabilité limitée enregistrée au Sultanat d\'Oman (n° CR 1594268). Contact : omanigns@gmail.com' },
+      collected: { title: 'Données collectées', content: 'Lors de l\'utilisation de notre formulaire de contact : nom, e-mail, message, langue, et éventuellement données techniques (IP, user agent) pour la protection anti-spam. Nous stockons également votre préférence linguistique dans votre navigateur (localStorage).' },
+      purposes: { title: 'Finalités', content: 'Nous traitons vos données pour répondre à vos demandes, fournir nos services et respecter nos obligations légales. Nous ne vendons ni ne louons vos données personnelles.' },
+      legalBasis: { title: 'Base légale', content: 'Le traitement repose sur votre consentement explicite lors de la soumission du formulaire. Pour la fonctionnalité essentielle (préférence de langue), nous nous appuyons sur l\'intérêt légitime.' },
+      retention: { title: 'Conservation', content: 'Les soumissions du formulaire sont conservées 24 mois à compter de la date d\'envoi, sauf obligation légale contraire. Vous pouvez demander une suppression anticipée à tout moment.' },
+      rights: { title: 'Vos droits', content: 'Vous disposez des droits d\'accès, de rectification, d\'effacement, de portabilité, d\'opposition et de retrait du consentement. Contactez-nous à omanigns@gmail.com avec l\'objet « Demande de confidentialité ». Réponse sous 45 jours.' },
+      cookies: { title: 'Cookies et stockage local', content: 'Nous utilisons uniquement le localStorage essentiel pour votre préférence de langue. Aucun cookie publicitaire ou de suivi. Aucun consentement requis pour cette fonctionnalité strictement nécessaire.' },
+      transfers: { title: 'Transferts internationaux', content: 'Vos données peuvent être traitées par Supabase (notre hébergeur). Nous veillons à ce que des garanties appropriées (ex. clauses contractuelles types) soient en place.' },
+      security: { title: 'Sécurité', content: 'Nous mettons en œuvre des mesures techniques et organisationnelles : chiffrement HTTPS, contrôles d\'accès, et Row Level Security sur nos bases de données.' },
+      contact: { title: 'Contact et réclamations', content: 'Pour toute demande : omanigns@gmail.com. Vous pouvez également saisir l\'autorité de protection des données de votre pays.' }
+    },
+    footer: {
+      privacyPolicy: 'Politique de confidentialité',
+      dataRights: 'Exercer vos droits sur vos données'
     }
   },
   ar: {
@@ -311,7 +383,9 @@ export const translations = {
         submit: 'إرسال',
         sending: 'جاري الإرسال...',
         success: 'تم إرسال الرسالة بنجاح!',
-        error: 'فشل الإرسال. يرجى المحاولة مرة أخرى.'
+        error: 'فشل الإرسال. يرجى المحاولة مرة أخرى.',
+        consentLabel: 'لقد قرأت سياسة الخصوصية وأوافق على معالجة بياناتي الشخصية للرد على استفساري.',
+        consentError: 'يجب قبول سياسة الخصوصية لإرسال هذا النموذج.'
       }
     },
     legal: {
@@ -324,6 +398,25 @@ export const translations = {
       countryValue: 'سلطنة عمان',
       crNumber: 'رقم السجل التجاري',
       crNumberValue: '1594268'
+    },
+    privacy: {
+      title: 'سياسة الخصوصية',
+      lastUpdated: 'آخر تحديث: فبراير 2025',
+      intro: 'شركة حلول الربط العالمية ملتزمة بحماية بياناتك الشخصية. توضح هذه السياسة كيفية جمع واستخدام وتخزين وحماية معلوماتك وفقًا للقوانين المعمول بها بما في ذلك قانون حماية البيانات الشخصية العماني، واللائحة العامة لحماية البيانات الأوروبية، والقانون الاتحادي لدولة الإمارات 45/2021 وقوانين الخصوصية الأمريكية.',
+      controller: { title: 'مسؤول المعالجة', content: 'مسؤول المعالجة هو شركة حلول الربط العالمية ش.م.م، شركة ذات مسؤولية محدودة مسجلة في سلطنة عمان (رقم السجل التجاري 1594268). للاتصال: omanigns@gmail.com' },
+      collected: { title: 'البيانات التي نجمعها', content: 'عند استخدام نموذج الاتصال: الاسم، البريد الإلكتروني، الرسالة، اللغة، وبيانات تقنية اختيارية (عنوان IP، المتصفح) للحماية من الرسائل المزعجة. نخزن أيضًا تفضيل اللغة في متصفحك (localStorage).' },
+      purposes: { title: 'أغراض المعالجة', content: 'نعالج بياناتك للرد على استفساراتك وتقديم الخدمات المطلوبة والامتثال للالتزامات القانونية. لا نبيع ولا نؤجر بياناتك الشخصية.' },
+      legalBasis: { title: 'الأساس القانوني', content: 'تعتمد المعالجة على موافقتك الصريحة عند تقديم النموذج. بالنسبة لوظيفة الموقع الأساسية (تفضيل اللغة)، نعتمد على المصلحة المشروعة.' },
+      retention: { title: 'الاحتفاظ بالبيانات', content: 'تُحفظ طلبات النموذج لمدة 24 شهرًا من تاريخ الإرسال، ما لم يتطلب القانون مدة أطول. يمكنك طلب الحذف المبكر في أي وقت.' },
+      rights: { title: 'حقوقك', content: 'لديك الحق في: الوصول لبياناتك، تصحيحها، طلب المحو، الحصول على نسخة، الاعتراض، وسحب الموافقة. اتصل بنا على omanigns@gmail.com بعنوان "طلب خصوصية البيانات". سنرد خلال 45 يومًا.' },
+      cookies: { title: 'ملفات تعريف الارتباط والتخزين المحلي', content: 'نستخدم localStorage الضروري فقط لتخزين تفضيل اللغة. لا نستخدم ملفات تعريف ارتباط إعلانية أو تتبعية. لا يلزم الموافقة لهذه الوظيفة الضرورية.' },
+      transfers: { title: 'التحويلات الدولية', content: 'قد تتم معالجة بياناتك من قبل Supabase (مزود الاستضافة). نضمن وجود ضمانات مناسبة (مثل البنود التعاقدية النموذجية) للتحويلات خارج ولايتك القضائية.' },
+      security: { title: 'الأمن', content: 'نطبق تدابير تقنية وتنظيمية: تشفير HTTPS، ضوابط الوصول، وRow Level Security على قواعد البيانات.' },
+      contact: { title: 'الاتصال والشكاوى', content: 'للاستفسارات: omanigns@gmail.com. يمكنك أيضًا التقدم بشكوى إلى سلطة حماية البيانات المحلية.' }
+    },
+    footer: {
+      privacyPolicy: 'سياسة الخصوصية',
+      dataRights: 'ممارسة حقوقك على بياناتك'
     }
   }
 };

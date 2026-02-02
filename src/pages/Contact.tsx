@@ -1,12 +1,14 @@
 import { useState, FormEvent } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
+import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 interface FormErrors {
   name?: string;
   email?: string;
   message?: string;
+  consent?: string;
 }
 
 export function Contact() {
@@ -14,7 +16,8 @@ export function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    message: '',
+    consent: false
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -51,6 +54,11 @@ export function Contact() {
       newErrors.message = 'Message must be at least 10 characters';
     } else if (formData.message.trim().length > 2000) {
       newErrors.message = 'Message must be less than 2000 characters';
+    }
+
+    // Validate consent
+    if (!formData.consent) {
+      newErrors.consent = t.contact.form.consentError;
     }
 
     setErrors(newErrors);
@@ -104,7 +112,7 @@ export function Contact() {
       }
 
       setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: '', email: '', message: '', consent: false });
       setErrors({});
 
       setTimeout(() => setStatus('idle'), 5000);
@@ -130,11 +138,12 @@ export function Contact() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLInputElement>) => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     });
     
     // Clear error when user starts typing
@@ -325,6 +334,33 @@ export function Contact() {
                     {formData.message.length} / 2000
                   </p>
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    name="consent"
+                    checked={formData.consent}
+                    onChange={handleChange}
+                    className="mt-1 w-4 h-4 rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-blue-900">
+                    {t.contact.form.consentLabel}{' '}
+                    <Link
+                      to="/privacy"
+                      className="text-blue-600 hover:text-blue-700 underline font-medium"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {t.footer.privacyPolicy}
+                    </Link>
+                    .
+                  </span>
+                </label>
+                {errors.consent && (
+                  <p className="text-sm text-red-600">{errors.consent}</p>
+                )}
               </div>
 
               <button

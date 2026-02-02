@@ -55,6 +55,12 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
             description: 'Legal information about GLOBAL NEXUS SOLUTIONS LLC, including company registration details.',
             keywords: 'legal information, company registration, commercial registration, Oman'
           };
+        case '/privacy':
+          return {
+            title: t.privacy.title,
+            description: 'Privacy Policy - How GLOBAL NEXUS SOLUTIONS LLC collects, uses, and protects your personal data. Compliant with Oman PDPL, GDPR, and international privacy laws.',
+            keywords: 'privacy policy, data protection, personal data, GDPR, Oman'
+          };
         default:
           return {
             title: 'GLOBAL NEXUS SOLUTIONS LLC',

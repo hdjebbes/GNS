@@ -107,21 +107,24 @@ export function StructuredData() {
             services: 'Services',
             sectors: 'Business Sectors',
             contact: 'Contact Us',
-            legal: 'Legal Information'
+            legal: 'Legal Information',
+            privacy: 'Privacy Policy'
           },
           fr: {
             about: 'À propos',
             services: 'Services',
             sectors: 'Secteurs d\'activité',
             contact: 'Nous contacter',
-            legal: 'Informations légales'
+            legal: 'Informations légales',
+            privacy: 'Politique de confidentialité'
           },
           ar: {
             about: 'من نحن',
             services: 'الخدمات',
             sectors: 'قطاعات الأعمال',
             contact: 'اتصل بنا',
-            legal: 'المعلومات القانونية'
+            legal: 'المعلومات القانونية',
+            privacy: 'سياسة الخصوصية'
           }
         };
 
