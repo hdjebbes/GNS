@@ -21,15 +21,27 @@ function getLanguageFromCountryCode(countryCode: string): Language {
   return 'en';
 }
 
-const IP_GEO_API = 'https://ip-api.com/json/?fields=countryCode';
+const IP_GEO_API = 'https://ipapi.co/json/';
+const FETCH_TIMEOUT_MS = 5000;
+
+/** AbortController + setTimeout fallback for browsers that don't support AbortSignal.timeout(). */
+function fetchWithTimeout(url: string): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  return fetch(url, {
+    signal: controller.signal,
+    mode: 'cors',
+  }).finally(() => clearTimeout(timeoutId));
+}
 
 /** Fetches user's country code from connection IP and returns the matching language, or "en" on error. */
 async function fetchLanguageFromIp(): Promise<Language> {
   try {
-    const res = await fetch(IP_GEO_API, { signal: AbortSignal.timeout(5000) });
+    const res = await fetchWithTimeout(IP_GEO_API);
     if (!res.ok) return 'en';
     const data = await res.json();
-    return getLanguageFromCountryCode(data?.countryCode ?? '');
+    const code = data?.country_code ?? data?.countryCode ?? '';
+    return getLanguageFromCountryCode(code);
   } catch {
     return 'en';
   }
