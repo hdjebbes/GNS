@@ -4,6 +4,22 @@ import { Language, translations } from '../i18n/translations';
 // Use the English translation type as the base structure (all languages have the same structure)
 type TranslationType = typeof translations.en;
 
+const SUPPORTED_LANGUAGES: Language[] = ['en', 'fr', 'ar'];
+
+/** Maps browser locale (e.g. "fr-FR", "ar-OM") to a supported app language. Falls back to "en" if not supported. */
+function getLanguageFromLocale(): Language {
+  if (typeof navigator === 'undefined') return 'en';
+  const locale =
+    navigator.language ||
+    (navigator.languages && navigator.languages[0]) ||
+    '';
+  const code = locale.split(/[-_]/)[0]?.toLowerCase() || 'en';
+  if (SUPPORTED_LANGUAGES.includes(code as Language)) {
+    return code as Language;
+  }
+  return 'en';
+}
+
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
@@ -16,17 +32,14 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('language');
-    const lang = (saved as Language) || 'en';
-    // Validate that the saved language is valid
-    if (lang === 'en' || lang === 'fr' || lang === 'ar') {
-      return lang;
+    if (saved && SUPPORTED_LANGUAGES.includes(saved as Language)) {
+      return saved as Language;
     }
-    return 'en';
+    return getLanguageFromLocale();
   });
 
   const setLanguage = useCallback((lang: Language) => {
-    // Validate language before setting
-    if (lang === 'en' || lang === 'fr' || lang === 'ar') {
+    if (SUPPORTED_LANGUAGES.includes(lang)) {
       setLanguageState(lang);
       localStorage.setItem('language', lang);
     } else {
