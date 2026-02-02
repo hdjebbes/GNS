@@ -6,18 +6,33 @@ type TranslationType = typeof translations.en;
 
 const SUPPORTED_LANGUAGES: Language[] = ['en', 'fr', 'ar'];
 
-/** Maps browser locale (e.g. "fr-FR", "ar-OM") to a supported app language. Falls back to "en" if not supported. */
-function getLanguageFromLocale(): Language {
-  if (typeof navigator === 'undefined') return 'en';
-  const locale =
-    navigator.language ||
-    (navigator.languages && navigator.languages[0]) ||
-    '';
-  const code = locale.split(/[-_]/)[0]?.toLowerCase() || 'en';
-  if (SUPPORTED_LANGUAGES.includes(code as Language)) {
-    return code as Language;
-  }
+/** Country codes that map to French. */
+const FRENCH_COUNTRY_CODES = new Set(['FR', 'BE', 'CH', 'LU', 'MC', 'RE', 'GP', 'MQ', 'GF', 'YT']);
+/** Country codes that map to Arabic. */
+const ARABIC_COUNTRY_CODES = new Set([
+  'OM', 'SA', 'AE', 'QA', 'KW', 'BH', 'YE', 'IQ', 'SY', 'JO', 'LB', 'PS', 'EG', 'LY', 'TN', 'DZ', 'MA', 'MR', 'SD', 'SO', 'DJ', 'KM'
+]);
+
+/** Maps country code from IP geolocation to a supported app language. Falls back to "en" if not mapped. */
+function getLanguageFromCountryCode(countryCode: string): Language {
+  const code = countryCode?.toUpperCase() || '';
+  if (FRENCH_COUNTRY_CODES.has(code)) return 'fr';
+  if (ARABIC_COUNTRY_CODES.has(code)) return 'ar';
   return 'en';
+}
+
+const IP_GEO_API = 'https://ip-api.com/json/?fields=countryCode';
+
+/** Fetches user's country code from connection IP and returns the matching language, or "en" on error. */
+async function fetchLanguageFromIp(): Promise<Language> {
+  try {
+    const res = await fetch(IP_GEO_API, { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) return 'en';
+    const data = await res.json();
+    return getLanguageFromCountryCode(data?.countryCode ?? '');
+  } catch {
+    return 'en';
+  }
 }
 
 interface LanguageContextType {
@@ -35,8 +50,22 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (saved && SUPPORTED_LANGUAGES.includes(saved as Language)) {
       return saved as Language;
     }
-    return getLanguageFromLocale();
+    return 'en';
   });
+
+  // When no saved language, detect from connection IP and set language (fallback stays en)
+  useEffect(() => {
+    const saved = localStorage.getItem('language');
+    if (saved && SUPPORTED_LANGUAGES.includes(saved as Language)) return;
+    let cancelled = false;
+    fetchLanguageFromIp().then((lang) => {
+      if (!cancelled) {
+        setLanguageState(lang);
+        localStorage.setItem('language', lang);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   const setLanguage = useCallback((lang: Language) => {
     if (SUPPORTED_LANGUAGES.includes(lang)) {
