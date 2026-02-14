@@ -1,6 +1,13 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { COMPANY } from '../constants';
+
+interface SchemaObject {
+  '@context': string;
+  '@type': string;
+  [key: string]: unknown;
+}
 
 export function StructuredData() {
   const location = useLocation();
@@ -10,50 +17,50 @@ export function StructuredData() {
     const baseUrl = window.location.origin;
 
     // Organization Schema
-    const organizationSchema = {
+    const organizationSchema: SchemaObject = {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'GLOBAL NEXUS SOLUTIONS LLC',
-      alternateName: 'GNS',
+      name: COMPANY.name,
+      alternateName: COMPANY.shortName,
       url: baseUrl,
       logo: `${baseUrl}/logo.png`,
-      description: 'Professional services company based in the Sultanate of Oman, providing integrated solutions across consulting, technology, logistics, and administrative services.',
+      description: COMPANY.baseDescription,
       address: {
         '@type': 'PostalAddress',
-        addressCountry: 'OM',
-        addressLocality: 'Sultanate of Oman'
+        addressCountry: COMPANY.countryCode,
+        addressLocality: COMPANY.country
       },
       contactPoint: {
         '@type': 'ContactPoint',
-        telephone: '+968-79924362',
+        telephone: COMPANY.phoneSchema,
         contactType: 'customer service',
-        email: 'omanigns@gmail.com',
-        areaServed: 'OM',
+        email: COMPANY.email,
+        areaServed: COMPANY.countryCode,
         availableLanguage: ['en', 'fr', 'ar']
       },
       sameAs: [],
-      foundingDate: '2024',
-      legalName: 'GLOBAL NEXUS SOLUTIONS LLC',
-      taxID: '1594268'
+      foundingDate: COMPANY.foundingDate,
+      legalName: COMPANY.name,
+      taxID: COMPANY.crNumber
     };
 
     // LocalBusiness Schema (for contact page)
-    const localBusinessSchema = {
+    const localBusinessSchema: SchemaObject = {
       '@context': 'https://schema.org',
       '@type': 'ProfessionalService',
-      name: 'GLOBAL NEXUS SOLUTIONS LLC',
+      name: COMPANY.name,
       image: `${baseUrl}/logo.png`,
       url: baseUrl,
-      telephone: '+968-79924362',
-      email: 'omanigns@gmail.com',
+      telephone: COMPANY.phoneSchema,
+      email: COMPANY.email,
       address: {
         '@type': 'PostalAddress',
-        addressCountry: 'OM',
-        addressLocality: 'Sultanate of Oman'
+        addressCountry: COMPANY.countryCode,
+        addressLocality: COMPANY.country
       },
       geo: {
         '@type': 'GeoCoordinates',
-        addressCountry: 'OM'
+        addressCountry: COMPANY.countryCode
       },
       areaServed: {
         '@type': 'Country',
@@ -64,17 +71,17 @@ export function StructuredData() {
         name: 'Oman'
       },
       priceRange: '$$',
-      currenciesAccepted: 'OMR',
+      currenciesAccepted: COMPANY.currency,
       paymentAccepted: 'Cash, Credit Card, Bank Transfer'
     };
 
     // Website Schema
-    const websiteSchema = {
+    const websiteSchema: SchemaObject = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'GLOBAL NEXUS SOLUTIONS LLC',
+      name: COMPANY.name,
       url: baseUrl,
-      description: 'Professional services company based in the Sultanate of Oman',
+      description: `Professional services company based in the ${COMPANY.country}`,
       inLanguage: language === 'en' ? 'en-US' : language === 'fr' ? 'fr-FR' : 'ar-OM',
       potentialAction: {
         '@type': 'SearchAction',
@@ -87,7 +94,7 @@ export function StructuredData() {
     };
 
     // Breadcrumb Schema
-    const getBreadcrumbSchema = () => {
+    const getBreadcrumbSchema = (): SchemaObject => {
       const pathSegments = location.pathname.split('/').filter(Boolean);
       const items = [
         {
@@ -144,8 +151,8 @@ export function StructuredData() {
     };
 
     // Page-specific schemas
-    const getPageSpecificSchema = () => {
-      const schemas: any[] = [];
+    const getPageSpecificSchema = (): SchemaObject[] => {
+      const schemas: SchemaObject[] = [];
 
       if (location.pathname === '/') {
         // Home page - Service schema
@@ -155,7 +162,7 @@ export function StructuredData() {
           serviceType: 'Professional Services',
           provider: {
             '@type': 'Organization',
-            name: 'GLOBAL NEXUS SOLUTIONS LLC'
+            name: COMPANY.name
           },
           areaServed: {
             '@type': 'Country',
@@ -222,7 +229,7 @@ export function StructuredData() {
     existingScripts.forEach(script => script.remove());
 
     // Add all schemas
-    const schemas = [
+    const schemas: SchemaObject[] = [
       organizationSchema,
       websiteSchema,
       getBreadcrumbSchema(),
@@ -241,7 +248,6 @@ export function StructuredData() {
     });
 
     return () => {
-      // Cleanup function
       const scripts = document.querySelectorAll('script[type="application/ld+json"]');
       scripts.forEach(script => script.remove());
     };

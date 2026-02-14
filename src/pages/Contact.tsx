@@ -3,6 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { COMPANY } from '../constants';
 
 interface FormErrors {
   name?: string;
@@ -66,7 +67,12 @@ export function Contact() {
   };
 
   const sanitizeInput = (input: string): string => {
-    return input.trim().replace(/[<>]/g, '');
+    return input.trim()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -92,7 +98,7 @@ export function Contact() {
         // Ignore errors for optional fields
       }
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('contact_submissions')
         .insert([
           {
@@ -121,15 +127,13 @@ export function Contact() {
       setStatus('error');
       
       let message = 'Failed to send message. Please try again.';
-      
+
       if (error && typeof error === 'object' && 'message' in error) {
-        const errorMessage = String(error.message);
-        if (errorMessage.includes('CORS') || errorMessage.includes('NetworkError')) {
+        const errorMsg = String((error as { message: string }).message);
+        if (errorMsg.includes('CORS') || errorMsg.includes('NetworkError')) {
           message = 'Network error. Please check your connection and try again.';
-        } else if (errorMessage.includes('fetch')) {
+        } else if (errorMsg.includes('fetch')) {
           message = 'Unable to connect to the server. Please try again later.';
-        } else {
-          message = errorMessage;
         }
       }
       
@@ -138,7 +142,7 @@ export function Contact() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
     setFormData({
@@ -219,10 +223,10 @@ export function Contact() {
                       {t.contact.email}
                     </h3>
                     <a
-                      href="mailto:omanigns@gmail.com"
+                      href={`mailto:${COMPANY.email}`}
                       className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
                     >
-                      omanigns@gmail.com
+                      {COMPANY.email}
                     </a>
                   </div>
                 </div>
@@ -238,10 +242,10 @@ export function Contact() {
                       {t.contact.phone}
                     </h3>
                     <a
-                      href="tel:+96879924362"
+                      href={`tel:${COMPANY.phone}`}
                       className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
                     >
-                      +968 79924362
+                      {COMPANY.phoneDisplay}
                     </a>
                   </div>
                 </div>

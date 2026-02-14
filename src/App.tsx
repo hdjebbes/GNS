@@ -51,7 +51,7 @@ function AppContent() {
       <ScrollToTop />
       <div className="min-h-screen flex flex-col relative">
         <Navigation />
-        <main className="flex-grow relative z-10">
+        <main id="main-content" className="flex-grow relative z-10">
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<Home />} />
