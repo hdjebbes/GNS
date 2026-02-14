@@ -3,7 +3,6 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { COMPANY } from '../constants';
-import { supabase } from '../lib/supabase';
 
 interface FormErrors {
   name?: string;
@@ -86,23 +85,30 @@ export function Contact() {
     setErrorMessage('');
 
     try {
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([
-          {
-            name: sanitizeInput(formData.name),
-            email: sanitizeInput(formData.email).toLowerCase(),
-            message: sanitizeInput(formData.message),
-            language: language,
-            ip_address: null,
-            user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null
-          }
-        ])
-        .select();
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/$/, '');
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+      if (!supabaseUrl || !supabaseAnonKey) {
+        throw new Error('Missing Supabase configuration');
+      }
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+      const response = await fetch(`${supabaseUrl}/functions/v1/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+        },
+        body: JSON.stringify({
+          name: sanitizeInput(formData.name),
+          email: sanitizeInput(formData.email).toLowerCase(),
+          message: sanitizeInput(formData.message),
+          language: language,
+          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error((data as { error?: string }).error || `Request failed (${response.status})`);
       }
 
       setStatus('success');
@@ -115,16 +121,16 @@ export function Contact() {
       setStatus('error');
 
       let message = 'Failed to send message. Please try again.';
-
       if (error && typeof error === 'object' && 'message' in error) {
         const errorMsg = String((error as { message: string }).message);
         if (errorMsg.includes('CORS') || errorMsg.includes('NetworkError')) {
           message = 'Network error. Please check your connection and try again.';
         } else if (errorMsg.includes('fetch')) {
           message = 'Unable to connect to the server. Please try again later.';
+        } else if (errorMsg.includes('Invalid') || errorMsg.includes('Failed to save')) {
+          message = errorMsg;
         }
       }
-
       setErrorMessage(message);
       setTimeout(() => setStatus('idle'), 5000);
     }
