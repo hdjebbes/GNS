@@ -1,6 +1,5 @@
 import { useState, FormEvent } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { COMPANY } from '../constants';
@@ -66,18 +65,9 @@ export function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const sanitizeInput = (input: string): string => {
-    return input.trim()
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#x27;');
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -86,35 +76,27 @@ export function Contact() {
     setErrorMessage('');
 
     try {
-      // Get IP address and user agent (optional, for spam protection)
-      let ipAddress: string | undefined;
-      let userAgent: string | undefined;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/$/, '');
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
 
-      try {
-        userAgent = navigator.userAgent;
-        // Note: Getting real IP requires a backend service
-        // For now, we'll skip IP collection or use a service
-      } catch (err) {
-        // Ignore errors for optional fields
-      }
+      const response = await fetch(`${supabaseUrl}/functions/v1/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
+          language,
+          user_agent: navigator.userAgent,
+        }),
+      });
 
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([
-          {
-            name: sanitizeInput(formData.name),
-            email: sanitizeInput(formData.email).toLowerCase(),
-            message: sanitizeInput(formData.message),
-            language: language,
-            ip_address: ipAddress,
-            user_agent: userAgent
-          }
-        ])
-        .select();
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to send message');
       }
 
       setStatus('success');
@@ -125,18 +107,13 @@ export function Contact() {
     } catch (error: unknown) {
       console.error('Error submitting form:', error);
       setStatus('error');
-      
+
       let message = 'Failed to send message. Please try again.';
 
-      if (error && typeof error === 'object' && 'message' in error) {
-        const errorMsg = String((error as { message: string }).message);
-        if (errorMsg.includes('CORS') || errorMsg.includes('NetworkError')) {
-          message = 'Network error. Please check your connection and try again.';
-        } else if (errorMsg.includes('fetch')) {
-          message = 'Unable to connect to the server. Please try again later.';
-        }
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        message = 'Network error. Please check your connection and try again.';
       }
-      
+
       setErrorMessage(message);
       setTimeout(() => setStatus('idle'), 5000);
     }
