@@ -60,6 +60,17 @@ supabase db push
 # File: supabase/migrations/20251219201008_create_contact_submissions.sql
 ```
 
+6. **(Production)** Deploy the contact Edge Function so the contact form works in production:
+```bash
+# Install Supabase CLI: https://supabase.com/docs/guides/cli
+# Log in and link your project, then:
+supabase functions deploy contact
+
+# Set secrets in Supabase Dashboard > Edge Functions > contact > Secrets (or via CLI):
+# - RESEND_API_KEY (optional, for email notifications)
+```
+If the function is not deployed, the form will show an error and suggest emailing you directly.
+
 ## Development
 
 Start the development server:
@@ -107,6 +118,8 @@ project 3/
 │   ├── App.tsx          # Main app component
 │   └── main.tsx         # Entry point
 ├── supabase/
+│   ├── functions/       # Edge Functions (e.g. contact form)
+│   │   └── contact/
 │   └── migrations/      # Database migrations
 └── public/              # Static assets
 ```

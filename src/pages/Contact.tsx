@@ -22,6 +22,7 @@ export function Contact() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [showEmailFallback, setShowEmailFallback] = useState(false);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -108,9 +109,13 @@ export function Contact() {
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error((data as { error?: string }).error || `Request failed (${response.status})`);
+        const errMsg = (data as { error?: string }).error || `Request failed (${response.status})`;
+        const err = new Error(errMsg) as Error & { status?: number };
+        err.status = response.status;
+        throw err;
       }
 
+      setShowEmailFallback(false);
       setStatus('success');
       setFormData({ name: '', email: '', message: '', consent: false });
       setErrors({});
@@ -121,16 +126,21 @@ export function Contact() {
       setStatus('error');
 
       let message = 'Failed to send message. Please try again.';
+      let useFallback = false;
       if (error && typeof error === 'object' && 'message' in error) {
-        const errorMsg = String((error as { message: string }).message);
-        if (errorMsg.includes('CORS') || errorMsg.includes('NetworkError')) {
-          message = 'Network error. Please check your connection and try again.';
+        const err = error as Error & { status?: number };
+        const errorMsg = String(err.message);
+        if (err.status === 404 || errorMsg.includes('CORS') || errorMsg.includes('NetworkError')) {
+          message = 'The contact form service is temporarily unavailable.';
+          useFallback = true;
         } else if (errorMsg.includes('fetch')) {
-          message = 'Unable to connect to the server. Please try again later.';
+          message = 'The contact form service is temporarily unavailable.';
+          useFallback = true;
         } else if (errorMsg.includes('Invalid') || errorMsg.includes('Failed to save')) {
           message = errorMsg;
         }
       }
+      setShowEmailFallback(useFallback);
       setErrorMessage(message);
       setTimeout(() => setStatus('idle'), 5000);
     }
@@ -379,8 +389,16 @@ export function Contact() {
               )}
 
               {status === 'error' && (
-                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md">
-                  {errorMessage || t.contact.form.error}
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-md space-y-2">
+                  <p>{errorMessage || t.contact.form.error}</p>
+                  {showEmailFallback && (
+                    <p className="text-sm">
+                      Please email us directly at{' '}
+                      <a href={`mailto:${COMPANY.email}`} className="text-blue-600 hover:text-blue-700 underline font-medium">
+                        {COMPANY.email}
+                      </a>
+                    </p>
+                  )}
                 </div>
               )}
             </form>
