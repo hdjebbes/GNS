@@ -4,79 +4,79 @@
   
   <!-- Home Page -->
   <url>
-    <loc>https://globalnexussolutions.com/</loc>
+    <loc>https://www.gnsols.com/</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://globalnexussolutions.com/" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://globalnexussolutions.com/" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://globalnexussolutions.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gnsols.com/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.gnsols.com/" />
   </url>
   
   <!-- About Page -->
   <url>
-    <loc>https://globalnexussolutions.com/about</loc>
+    <loc>https://www.gnsols.com/about</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://globalnexussolutions.com/about" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://globalnexussolutions.com/about" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://globalnexussolutions.com/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/about" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gnsols.com/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.gnsols.com/about" />
   </url>
   
   <!-- Services Page -->
   <url>
-    <loc>https://globalnexussolutions.com/services</loc>
+    <loc>https://www.gnsols.com/services</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://globalnexussolutions.com/services" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://globalnexussolutions.com/services" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://globalnexussolutions.com/services" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/services" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gnsols.com/services" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.gnsols.com/services" />
   </url>
   
   <!-- Sectors Page -->
   <url>
-    <loc>https://globalnexussolutions.com/sectors</loc>
+    <loc>https://www.gnsols.com/sectors</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://globalnexussolutions.com/sectors" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://globalnexussolutions.com/sectors" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://globalnexussolutions.com/sectors" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/sectors" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gnsols.com/sectors" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.gnsols.com/sectors" />
   </url>
   
   <!-- Contact Page -->
   <url>
-    <loc>https://globalnexussolutions.com/contact</loc>
+    <loc>https://www.gnsols.com/contact</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://globalnexussolutions.com/contact" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://globalnexussolutions.com/contact" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://globalnexussolutions.com/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/contact" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gnsols.com/contact" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.gnsols.com/contact" />
   </url>
   
   <!-- Legal Page -->
   <url>
-    <loc>https://globalnexussolutions.com/legal</loc>
+    <loc>https://www.gnsols.com/legal</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://globalnexussolutions.com/legal" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://globalnexussolutions.com/legal" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://globalnexussolutions.com/legal" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/legal" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gnsols.com/legal" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.gnsols.com/legal" />
   </url>
 
   <!-- Privacy Policy Page -->
   <url>
-    <loc>https://globalnexussolutions.com/privacy</loc>
+    <loc>https://www.gnsols.com/privacy</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://globalnexussolutions.com/privacy" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://globalnexussolutions.com/privacy" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://globalnexussolutions.com/privacy" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/privacy" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.gnsols.com/privacy" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.gnsols.com/privacy" />
   </url>
 
 </urlset>
