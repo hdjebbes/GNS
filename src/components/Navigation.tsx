@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, Home, Info, Briefcase, Building2, Mail, FileText } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -10,18 +10,17 @@ export function Navigation() {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
   const { language, setLanguage, t, isRTL } = useLanguage();
   const location = useLocation();
-  const langMenuRef = useRef<HTMLDivElement>(null);
+  const desktopLangMenuRef = useRef<HTMLDivElement>(null);
+  const mobileLangMenuRef = useRef<HTMLDivElement>(null);
 
-  // Recreate pages array on every render to ensure it updates
-  // This is more aggressive but ensures updates happen
-  const pages = [
+  const pages = useMemo(() => [
     { path: '/', label: t.nav.home, icon: Home },
     { path: '/about', label: t.nav.about, icon: Info },
     { path: '/services', label: t.nav.services, icon: Briefcase },
     { path: '/sectors', label: t.nav.sectors, icon: Building2 },
     { path: '/contact', label: t.nav.contact, icon: Mail },
     { path: '/legal', label: t.nav.legal, icon: FileText }
-  ];
+  ], [t]);
 
   const languages: { code: Language; name: string }[] = [
     { code: 'en', name: 'English' },
@@ -29,46 +28,48 @@ export function Navigation() {
     { code: 'ar', name: 'العربية' }
   ];
 
-  const handleLanguageChange = (e: React.MouseEvent<HTMLButtonElement>, lang: Language) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('🎯 Navigation: Language change requested:', lang);
-    
-    // Close menu first to prevent click outside handler from interfering
+  const handleLanguageChange = useCallback((lang: Language) => {
+    setLanguage(lang);
     setLangMenuOpen(false);
-    
-    // Use setTimeout to ensure state update happens after menu closes
-    setTimeout(() => {
-      setLanguage(lang);
-      console.log('✅ Language set to:', lang);
-    }, 0);
-  };
+  }, [setLanguage]);
 
-  // Close menus when clicking outside
+  // Close language menu on click outside
   useEffect(() => {
+    if (!langMenuOpen) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      // Check if click is inside the language menu or on a language button
-      if (langMenuRef.current && !langMenuRef.current.contains(target)) {
-        // Also check if the click is on a language button (they might be outside the ref)
-        const isLanguageButton = (target as Element).closest('button[data-language-button]');
-        if (!isLanguageButton) {
-          setLangMenuOpen(false);
-        }
+      if (
+        desktopLangMenuRef.current && !desktopLangMenuRef.current.contains(target) &&
+        mobileLangMenuRef.current && !mobileLangMenuRef.current.contains(target)
+      ) {
+        setLangMenuOpen(false);
+      }
+      // Handle case where only one ref is mounted
+      if (!desktopLangMenuRef.current && mobileLangMenuRef.current && !mobileLangMenuRef.current.contains(target)) {
+        setLangMenuOpen(false);
+      }
+      if (desktopLangMenuRef.current && !desktopLangMenuRef.current.contains(target) && !mobileLangMenuRef.current) {
+        setLangMenuOpen(false);
       }
     };
 
-    if (langMenuOpen) {
-      // Use a longer delay to ensure language change is processed first
-      const timeoutId = setTimeout(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-      }, 200);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [langMenuOpen]);
 
-      return () => {
-        clearTimeout(timeoutId);
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
+  // Close language menu on Escape key
+  useEffect(() => {
+    if (!langMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setLangMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [langMenuOpen]);
 
   // Close mobile menu when route changes
@@ -76,8 +77,33 @@ export function Navigation() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  const languageDropdown = (
+    <div
+      role="menu"
+      aria-label="Language selection"
+      className="absolute right-0 mt-2 w-48 bg-[#1e3a5f] rounded-xl shadow-2xl py-2 border border-blue-700/50 z-50"
+    >
+      {languages.map((lang) => (
+        <button
+          key={lang.code}
+          type="button"
+          role="menuitem"
+          onClick={() => handleLanguageChange(lang.code)}
+          className={`block w-full text-left px-4 py-3 text-sm hover:bg-blue-700/30 transition-all duration-300 ${
+            language === lang.code ? 'bg-blue-600/40 font-semibold text-white' : 'text-blue-100'
+          }`}
+        >
+          {lang.name}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <nav className="bg-[#0f172a] shadow-lg sticky top-0 z-50 border-b border-blue-900/30">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[60] focus:bg-blue-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-md">
+        Skip to main content
+      </a>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
           <div className="flex items-center">
@@ -109,76 +135,48 @@ export function Navigation() {
               );
             })}
 
-            <div className="relative ml-4" ref={langMenuRef}>
+            <div className="relative ml-4" ref={desktopLangMenuRef}>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLangMenuOpen(!langMenuOpen);
-                }}
+                aria-expanded={langMenuOpen}
+                aria-haspopup="true"
+                aria-label="Select language"
+                onClick={() => setLangMenuOpen(!langMenuOpen)}
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium text-blue-100 hover:text-white hover:bg-blue-800/30 transition-all duration-300"
               >
                 <Globe className="w-4 h-4" />
                 <span>{language.toUpperCase()}</span>
               </button>
 
-              {langMenuOpen && (
-                <div 
-                  className="absolute right-0 mt-2 w-48 bg-[#1e3a5f] rounded-xl shadow-2xl py-2 border border-blue-700/50 z-50"
-                  onClick={(e) => e.stopPropagation()}
-                  onMouseDown={(e) => e.stopPropagation()}
-                >
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      data-language-button="true"
-                      onClick={(e) => handleLanguageChange(e, lang.code)}
-                      onMouseDown={(e) => {
-                        // Prevent the click outside handler from firing
-                        e.stopPropagation();
-                      }}
-                      className={`block w-full text-left px-4 py-3 text-sm hover:bg-blue-700/30 transition-all duration-300 ${
-                        language === lang.code ? 'bg-blue-600/40 font-semibold text-white' : 'text-blue-100'
-                      }`}
-                    >
-                      {lang.name}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {langMenuOpen && languageDropdown}
             </div>
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
-            <div className="relative" ref={langMenuRef}>
+            <div className="relative" ref={mobileLangMenuRef}>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLangMenuOpen(!langMenuOpen);
-                }}
+                aria-expanded={langMenuOpen}
+                aria-haspopup="true"
+                aria-label="Select language"
+                onClick={() => setLangMenuOpen(!langMenuOpen)}
                 className="p-2 rounded-lg text-blue-100 hover:bg-blue-800/30 transition-all duration-300"
               >
                 <Globe className="w-5 h-5" />
               </button>
 
               {langMenuOpen && (
-                <div 
+                <div
+                  role="menu"
+                  aria-label="Language selection"
                   className={`absolute ${isRTL ? 'left-0' : 'right-0'} mt-2 w-48 bg-[#1e3a5f] rounded-xl shadow-2xl py-2 border border-blue-700/50 z-50`}
-                  onClick={(e) => e.stopPropagation()}
-                  onMouseDown={(e) => e.stopPropagation()}
                 >
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
                       type="button"
-                      data-language-button="true"
-                      onClick={(e) => handleLanguageChange(e, lang.code)}
-                      onMouseDown={(e) => {
-                        // Prevent the click outside handler from firing
-                        e.stopPropagation();
-                      }}
+                      role="menuitem"
+                      onClick={() => handleLanguageChange(lang.code)}
                       className={`block w-full text-left px-4 py-3 text-sm hover:bg-blue-700/30 transition-all duration-300 ${
                         language === lang.code ? 'bg-blue-600/40 font-semibold text-white' : 'text-blue-100'
                       }`}
@@ -192,6 +190,8 @@ export function Navigation() {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               className="p-2 rounded-lg text-blue-100 hover:bg-blue-800/30 transition-all duration-300"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -227,4 +227,3 @@ export function Navigation() {
     </nav>
   );
 }
-

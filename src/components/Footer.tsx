@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Logo } from './Logo';
+import { COMPANY } from '../constants';
 
 export function Footer() {
   const { t } = useLanguage();
@@ -19,7 +20,7 @@ export function Footer() {
               {t.home.subtitle}
             </p>
             <p className="text-blue-300 text-sm mt-4">
-              Professional services company based in the Sultanate of Oman
+              Professional services company based in the {COMPANY.country}
             </p>
           </div>
 
@@ -29,10 +30,10 @@ export function Footer() {
               {t.contact.email}
             </h4>
             <a
-              href="mailto:omanigns@gmail.com"
+              href={`mailto:${COMPANY.email}`}
               className="text-blue-200 hover:text-white transition-colors hover:underline"
             >
-              omanigns@gmail.com
+              {COMPANY.email}
             </a>
           </div>
 
@@ -42,10 +43,10 @@ export function Footer() {
               {t.contact.phone}
             </h4>
             <a
-              href="tel:+96879924362"
+              href={`tel:${COMPANY.phone}`}
               className="text-blue-200 hover:text-white transition-colors hover:underline"
             >
-              +968 79924362
+              {COMPANY.phoneDisplay}
             </a>
             <div className="mt-6">
               <h4 className="text-lg font-bold mb-2 flex items-center">
@@ -67,7 +68,7 @@ export function Footer() {
                 {t.footer.privacyPolicy}
               </Link>
               <a
-                href="mailto:omanigns@gmail.com?subject=Data%20Privacy%20Request"
+                href={`mailto:${COMPANY.email}?subject=Data%20Privacy%20Request`}
                 className="text-blue-300 hover:text-white transition-colors"
               >
                 {t.footer.dataRights}
@@ -75,7 +76,7 @@ export function Footer() {
             </div>
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <p className="text-blue-300 text-sm">
-                © {currentYear} GLOBAL NEXUS SOLUTIONS LLC. All rights reserved.
+                &copy; {currentYear} {COMPANY.name}. All rights reserved.
               </p>
               <p className="text-blue-400 text-sm">
                 CR Number: {t.legal.crNumberValue}

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { COMPANY } from '../constants';
 
 interface SEOProps {
   title?: string;
@@ -17,7 +18,7 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
     // Get page-specific content
     const getPageContent = () => {
       const path = location.pathname;
-      
+
       switch (path) {
         case '/':
           return {
@@ -46,32 +47,32 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
         case '/contact':
           return {
             title: t.contact.title,
-            description: 'Get in touch with GLOBAL NEXUS SOLUTIONS LLC. Contact us for business inquiries and support.',
+            description: `Get in touch with ${COMPANY.name}. Contact us for business inquiries and support.`,
             keywords: 'contact, email, phone, business inquiry, Oman'
           };
         case '/legal':
           return {
             title: t.legal.title,
-            description: 'Legal information about GLOBAL NEXUS SOLUTIONS LLC, including company registration details.',
+            description: `Legal information about ${COMPANY.name}, including company registration details.`,
             keywords: 'legal information, company registration, commercial registration, Oman'
           };
         case '/privacy':
           return {
             title: t.privacy.title,
-            description: 'Privacy Policy - How GLOBAL NEXUS SOLUTIONS LLC collects, uses, and protects your personal data. Compliant with Oman PDPL, GDPR, and international privacy laws.',
+            description: `Privacy Policy - How ${COMPANY.name} collects, uses, and protects your personal data. Compliant with Oman PDPL, GDPR, and international privacy laws.`,
             keywords: 'privacy policy, data protection, personal data, GDPR, Oman'
           };
         default:
           return {
-            title: 'GLOBAL NEXUS SOLUTIONS LLC',
-            description: 'Professional services company based in the Sultanate of Oman.',
+            title: COMPANY.name,
+            description: `Professional services company based in the ${COMPANY.country}.`,
             keywords: 'business solutions, Oman, consulting, technology'
           };
       }
     };
 
     const pageContent = getPageContent();
-    const finalTitle = title || `${pageContent.title} | GLOBAL NEXUS SOLUTIONS LLC`;
+    const finalTitle = title || `${pageContent.title} | ${COMPANY.name}`;
     const finalDescription = description || pageContent.description;
     const finalKeywords = keywords || pageContent.keywords;
     const baseUrl = window.location.origin;
@@ -103,25 +104,25 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
     // Standard meta tags
     updateMetaTag('description', finalDescription);
     updateMetaTag('keywords', finalKeywords);
-    
+
     // Open Graph tags
     updateMetaTag('og:title', finalTitle, 'property');
     updateMetaTag('og:description', finalDescription, 'property');
     updateMetaTag('og:type', 'website', 'property');
     updateMetaTag('og:url', currentUrl, 'property');
-    updateMetaTag('og:site_name', 'GLOBAL NEXUS SOLUTIONS LLC', 'property');
+    updateMetaTag('og:site_name', COMPANY.name, 'property');
     updateMetaTag('og:image', ogImage, 'property');
     updateMetaTag('og:image:width', '1200', 'property');
     updateMetaTag('og:image:height', '630', 'property');
-    updateMetaTag('og:image:alt', 'GLOBAL NEXUS SOLUTIONS LLC Logo', 'property');
-    
+    updateMetaTag('og:image:alt', `${COMPANY.name} Logo`, 'property');
+
     // Twitter Card tags
     updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:title', finalTitle);
     updateMetaTag('twitter:description', finalDescription);
     updateMetaTag('twitter:image', ogImage);
-    updateMetaTag('twitter:image:alt', 'GLOBAL NEXUS SOLUTIONS LLC Logo');
-    
+    updateMetaTag('twitter:image:alt', `${COMPANY.name} Logo`);
+
     // Language and locale
     updateMetaTag('language', language);
     const localeMap: Record<string, string> = {
@@ -130,7 +131,7 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
       ar: 'ar_OM'
     };
     updateMetaTag('og:locale', localeMap[language] || 'en_US', 'property');
-    
+
     // Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
     if (!canonical) {
@@ -145,18 +146,18 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
     updateMetaTag('googlebot', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
     updateMetaTag('theme-color', '#2563eb');
     updateMetaTag('color-scheme', 'light');
-    
+
     // Geo tags
-    updateMetaTag('geo.region', 'OM');
-    updateMetaTag('geo.placename', 'Sultanate of Oman');
-    
+    updateMetaTag('geo.region', COMPANY.countryCode);
+    updateMetaTag('geo.placename', COMPANY.country);
+
     // Mobile optimization
     updateMetaTag('format-detection', 'telephone=yes');
-    
+
     // Author and copyright
-    updateMetaTag('author', 'GLOBAL NEXUS SOLUTIONS LLC');
-    updateMetaTag('copyright', 'GLOBAL NEXUS SOLUTIONS LLC');
-    
+    updateMetaTag('author', COMPANY.name);
+    updateMetaTag('copyright', COMPANY.name);
+
     // Language alternates (hreflang)
     const updateHreflangTag = (lang: string, href: string) => {
       let element = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`) as HTMLLinkElement;
@@ -178,4 +179,3 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
 
   return null;
 }
-
