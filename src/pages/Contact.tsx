@@ -3,6 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { COMPANY } from '../constants';
+import { supabase } from '../lib/supabase';
 
 interface FormErrors {
   name?: string;
@@ -86,32 +87,21 @@ export function Contact() {
     setErrorMessage('');
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/$/, '');
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
-      if (!supabaseUrl || !supabaseAnonKey) {
-        throw new Error('Missing Supabase configuration');
-      }
-
-      const response = await fetch(`${supabaseUrl}/functions/v1/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-        },
-        body: JSON.stringify({
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert({
           name: sanitizeInput(formData.name),
           email: sanitizeInput(formData.email).toLowerCase(),
           message: sanitizeInput(formData.message),
           language: language,
+          ip_address: null,
           user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-        }),
-      });
+        })
+        .select();
 
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        const errMsg = (data as { error?: string }).error || `Request failed (${response.status})`;
-        const err = new Error(errMsg) as Error & { status?: number };
-        err.status = response.status;
+      if (error) {
+        const err = new Error(error.message) as Error & { code?: string };
+        err.code = error.code;
         throw err;
       }
 
@@ -128,12 +118,10 @@ export function Contact() {
       let message = 'Failed to send message. Please try again.';
       let useFallback = false;
       if (error && typeof error === 'object' && 'message' in error) {
-        const err = error as Error & { status?: number };
+        const err = error as Error & { status?: number; code?: string };
         const errorMsg = String(err.message);
-        if (err.status === 404 || errorMsg.includes('CORS') || errorMsg.includes('NetworkError')) {
-          message = 'The contact form service is temporarily unavailable.';
-          useFallback = true;
-        } else if (errorMsg.includes('fetch')) {
+        const isRls = err.code === '42501' || errorMsg.includes('row-level security');
+        if (err.status === 404 || errorMsg.includes('CORS') || errorMsg.includes('NetworkError') || errorMsg.includes('fetch') || isRls) {
           message = 'The contact form service is temporarily unavailable.';
           useFallback = true;
         } else if (errorMsg.includes('Invalid') || errorMsg.includes('Failed to save')) {
