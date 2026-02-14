@@ -3,6 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { COMPANY } from '../constants';
+import { supabase } from '../lib/supabase';
 
 interface FormErrors {
   name?: string;
@@ -85,9 +86,6 @@ export function Contact() {
     setErrorMessage('');
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/$/, '');
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
-
       const { error } = await supabase
         .from('contact_submissions')
         .insert([
@@ -96,8 +94,8 @@ export function Contact() {
             email: sanitizeInput(formData.email).toLowerCase(),
             message: sanitizeInput(formData.message),
             language: language,
-            ip_address: ipAddress,
-            user_agent: userAgent
+            ip_address: null,
+            user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null
           }
         ])
         .select();
