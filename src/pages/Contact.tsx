@@ -65,6 +65,15 @@ export function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const sanitizeInput = (input: string): string => {
+    return input.trim()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -79,24 +88,23 @@ export function Contact() {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/$/, '');
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
 
-      const response = await fetch(`${supabaseUrl}/functions/v1/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-        },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          message: formData.message.trim(),
-          language,
-          user_agent: navigator.userAgent,
-        }),
-      });
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          {
+            name: sanitizeInput(formData.name),
+            email: sanitizeInput(formData.email).toLowerCase(),
+            message: sanitizeInput(formData.message),
+            language: language,
+            ip_address: ipAddress,
+            user_agent: userAgent
+          }
+        ])
+        .select();
 
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to send message');
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
       }
 
       setStatus('success');
@@ -110,8 +118,13 @@ export function Contact() {
 
       let message = 'Failed to send message. Please try again.';
 
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        message = 'Network error. Please check your connection and try again.';
+      if (error && typeof error === 'object' && 'message' in error) {
+        const errorMsg = String((error as { message: string }).message);
+        if (errorMsg.includes('CORS') || errorMsg.includes('NetworkError')) {
+          message = 'Network error. Please check your connection and try again.';
+        } else if (errorMsg.includes('fetch')) {
+          message = 'Unable to connect to the server. Please try again later.';
+        }
       }
 
       setErrorMessage(message);
