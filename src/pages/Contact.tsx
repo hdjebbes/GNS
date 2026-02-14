@@ -87,17 +87,13 @@ export function Contact() {
     setErrorMessage('');
 
     try {
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert({
-          name: sanitizeInput(formData.name),
-          email: sanitizeInput(formData.email).toLowerCase(),
-          message: sanitizeInput(formData.message),
-          language: language,
-          ip_address: null,
-          user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
-        })
-        .select();
+      const { error } = await supabase.rpc('submit_contact_form', {
+        p_name: sanitizeInput(formData.name),
+        p_email: sanitizeInput(formData.email).toLowerCase(),
+        p_message: sanitizeInput(formData.message),
+        p_language: language,
+        p_user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+      });
 
       if (error) {
         const err = new Error(error.message) as Error & { code?: string };
