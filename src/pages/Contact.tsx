@@ -1,6 +1,5 @@
 import { useState, FormEvent } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { COMPANY } from '../constants';
@@ -77,7 +76,7 @@ export function Contact() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -86,17 +85,8 @@ export function Contact() {
     setErrorMessage('');
 
     try {
-      // Get IP address and user agent (optional, for spam protection)
-      let ipAddress: string | undefined;
-      let userAgent: string | undefined;
-
-      try {
-        userAgent = navigator.userAgent;
-        // Note: Getting real IP requires a backend service
-        // For now, we'll skip IP collection or use a service
-      } catch (err) {
-        // Ignore errors for optional fields
-      }
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim().replace(/\/$/, '');
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
 
       const { error } = await supabase
         .from('contact_submissions')
@@ -125,7 +115,7 @@ export function Contact() {
     } catch (error: unknown) {
       console.error('Error submitting form:', error);
       setStatus('error');
-      
+
       let message = 'Failed to send message. Please try again.';
 
       if (error && typeof error === 'object' && 'message' in error) {
@@ -136,7 +126,7 @@ export function Contact() {
           message = 'Unable to connect to the server. Please try again later.';
         }
       }
-      
+
       setErrorMessage(message);
       setTimeout(() => setStatus('idle'), 5000);
     }
