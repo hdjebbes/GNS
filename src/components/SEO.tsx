@@ -24,31 +24,31 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
           return {
             title: t.home.title,
             description: t.home.description.split('\n')[0],
-            keywords: 'business solutions, consulting, technology, logistics, Oman'
+            keywords: 'global solution, oman solution, services trading Oman, proposition service trading Oman, business solutions Oman, consulting Oman, IT solutions Oman, logistics Oman, import export Oman, professional services Oman, GNS'
           };
         case '/about':
           return {
             title: t.about.title,
             description: t.about.description.split('\n')[0],
-            keywords: 'about us, company, mission, vision, Oman business'
+            keywords: 'global solution Oman, oman solution, about GNS, mission vision, Oman business, professional services Oman'
           };
         case '/services':
           return {
             title: t.services.title,
-            description: 'Professional services including IT, consulting, administrative, and logistics support.',
-            keywords: 'services, IT support, consulting, administrative services, logistics'
+            description: 'Proposition de services trading Oman : IT, consulting, logistique, import-export. Global solution pour entreprises au Sultanat d\'Oman.',
+            keywords: 'services trading Oman, proposition service Oman, IT consulting Oman, logistics Oman, import export Oman, administrative services, global solution'
           };
         case '/sectors':
           return {
             title: t.sectors.title,
-            description: 'Serving various business sectors including technology, manufacturing, trade, and professional services.',
-            keywords: 'business sectors, industries, technology, manufacturing, trade'
+            description: 'Secteurs d\'activité : technologie, manufacturing, trading, commerce international. Solutions pour entreprises au Sultanat d\'Oman.',
+            keywords: 'business sectors Oman, trading Oman, technology Oman, manufacturing Oman, import export, oman solution'
           };
         case '/contact':
           return {
             title: t.contact.title,
-            description: `Get in touch with ${COMPANY.name}. Contact us for business inquiries and support.`,
-            keywords: 'contact, email, phone, business inquiry, Oman'
+            description: `Contactez GNS - Global Solution Oman. Proposition de services trading, consulting et solutions professionnelles au Sultanat d'Oman.`,
+            keywords: 'contact GNS, contact Oman solution, proposition service trading Oman, devis Oman, business inquiry Oman'
           };
         case '/legal':
           return {
@@ -65,8 +65,8 @@ export function SEO({ title, description, keywords, image }: SEOProps) {
         default:
           return {
             title: COMPANY.name,
-            description: `Professional services company based in the ${COMPANY.country}.`,
-            keywords: 'business solutions, Oman, consulting, technology'
+            description: `Global Solution Oman - Services trading, consulting IT et solutions professionnelles au Sultanat d'Oman.`,
+            keywords: 'global solution, oman solution, services trading Oman, consulting Oman, GNS'
           };
       }
     };

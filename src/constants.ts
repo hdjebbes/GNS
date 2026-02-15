@@ -1,6 +1,7 @@
 export const COMPANY = {
   name: 'GLOBAL NEXUS SOLUTIONS LLC',
   shortName: 'GNS',
+  alternateNames: ['Global Solution Oman', 'Oman Solution', 'GNS Oman', 'Global Nexus Solutions'],
   email: 'omanigns@gmail.com',
   phone: '+96879924362',
   phoneDisplay: '+968 79924362',
@@ -10,5 +11,5 @@ export const COMPANY = {
   countryCode: 'OM',
   foundingDate: '2024',
   currency: 'OMR',
-  baseDescription: 'Professional services company based in the Sultanate of Oman, providing integrated solutions across consulting, technology, logistics, and administrative services.',
+  baseDescription: 'Global Solution Oman - Professional services company in the Sultanate of Oman. Proposition de services trading, IT consulting, logistics, import-export and administrative solutions.',
 } as const;

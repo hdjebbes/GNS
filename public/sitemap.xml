@@ -5,7 +5,7 @@
   <!-- Home Page -->
   <url>
     <loc>https://www.gnsols.com/</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-02-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/" />
@@ -16,7 +16,7 @@
   <!-- About Page -->
   <url>
     <loc>https://www.gnsols.com/about</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-02-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/about" />
@@ -27,7 +27,7 @@
   <!-- Services Page -->
   <url>
     <loc>https://www.gnsols.com/services</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-02-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/services" />
@@ -38,7 +38,7 @@
   <!-- Sectors Page -->
   <url>
     <loc>https://www.gnsols.com/sectors</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-02-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/sectors" />
@@ -49,7 +49,7 @@
   <!-- Contact Page -->
   <url>
     <loc>https://www.gnsols.com/contact</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-02-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/contact" />
@@ -60,7 +60,7 @@
   <!-- Legal Page -->
   <url>
     <loc>https://www.gnsols.com/legal</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-02-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/legal" />
@@ -71,7 +71,7 @@
   <!-- Privacy Policy Page -->
   <url>
     <loc>https://www.gnsols.com/privacy</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-02-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.gnsols.com/privacy" />

@@ -21,7 +21,7 @@ export function StructuredData() {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: COMPANY.name,
-      alternateName: COMPANY.shortName,
+      alternateName: [COMPANY.shortName, ...(COMPANY.alternateNames || [])],
       url: baseUrl,
       logo: `${baseUrl}/logo.png`,
       description: COMPANY.baseDescription,
@@ -44,11 +44,13 @@ export function StructuredData() {
       taxID: COMPANY.crNumber
     };
 
-    // LocalBusiness Schema (for contact page)
+    // LocalBusiness Schema (for contact page) - targets "proposition service trading Oman"
     const localBusinessSchema: SchemaObject = {
       '@context': 'https://schema.org',
       '@type': 'ProfessionalService',
       name: COMPANY.name,
+      alternateName: ['Global Solution Oman', 'Oman Solution', 'GNS'],
+      description: 'Proposition de services trading, consulting IT et solutions professionnelles au Sultanat d\'Oman.',
       image: `${baseUrl}/logo.png`,
       url: baseUrl,
       telephone: COMPANY.phoneSchema,
@@ -79,9 +81,10 @@ export function StructuredData() {
     const websiteSchema: SchemaObject = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: COMPANY.name,
+      name: `${COMPANY.name} - Global Solution Oman`,
+      alternateName: 'GNS Oman - Services Trading & Solutions',
       url: baseUrl,
-      description: `Professional services company based in the ${COMPANY.country}`,
+      description: `Global Solution Oman - Proposition de services trading, consulting IT, logistique et solutions professionnelles au Sultanat d'Oman.`,
       inLanguage: language === 'en' ? 'en-US' : language === 'fr' ? 'fr-FR' : 'ar-OM',
       potentialAction: {
         '@type': 'SearchAction',
@@ -155,11 +158,13 @@ export function StructuredData() {
       const schemas: SchemaObject[] = [];
 
       if (location.pathname === '/') {
-        // Home page - Service schema
+        // Home page - Service schema targeting "global solution", "oman solution", "services trading Oman"
         schemas.push({
           '@context': 'https://schema.org',
           '@type': 'Service',
-          serviceType: 'Professional Services',
+          name: 'Global Solution Oman - Professional Services & Trading',
+          serviceType: 'Professional Services, Trading Support, Business Consulting',
+          description: 'Proposition de services trading, consulting IT, logistique et solutions professionnelles au Sultanat d\'Oman. Global solution for businesses in Oman.',
           provider: {
             '@type': 'Organization',
             name: COMPANY.name
@@ -170,7 +175,7 @@ export function StructuredData() {
           },
           hasOfferCatalog: {
             '@type': 'OfferCatalog',
-            name: 'Business Services',
+            name: 'Business Services - Global Solution Oman',
             itemListElement: [
               {
                 '@type': 'OfferCatalog',
@@ -215,9 +220,33 @@ export function StructuredData() {
                     name: 'Logistics & Trade Support'
                   }
                 }
+              },
+              {
+                '@type': 'OfferCatalog',
+                name: 'Trading Services Oman',
+                itemListElement: {
+                  '@type': 'Offer',
+                  itemOffered: {
+                    '@type': 'Service',
+                    name: 'Trading Services & Import Export Oman'
+                  }
+                }
               }
             ]
           }
+        });
+      }
+
+      if (location.pathname === '/services') {
+        // Services page - reinforce trading & Oman solution keywords
+        schemas.push({
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: 'Proposition de Services Trading Oman - Global Solution',
+          serviceType: 'Trading Services, IT Consulting, Logistics, Import Export',
+          description: 'Services trading, consulting IT, logistique et import-export au Sultanat d\'Oman. Global solution pour entreprises.',
+          provider: { '@type': 'Organization', name: COMPANY.name },
+          areaServed: { '@type': 'Country', name: 'Oman' }
         });
       }
 
